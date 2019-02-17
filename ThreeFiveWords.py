@@ -1,11 +1,10 @@
 def ThreeFiveWords(word):
-    if len(word) % 3 == 0 and len(word) % 5 == 0:
-        return 'three&five'
+    if len(word) % 3 == 0:
+        if len(word) % 5 == 0:
+            return 'three&five'
+        return 'three'
     elif len(word) % 5 == 0:
         return 'five'
-    elif len(word) % 3 == 0:
-        return 'three'
-    else:
-        return word
+    return word
     
-print(ThreeFiveWords(input('Type a word: ')))
+print(ThreeFiveWords(input()))
