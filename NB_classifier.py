@@ -8,11 +8,12 @@ y = df.target
 # 2) + 3)
 from sklearn.feature_extraction.text import CountVectorizer
 cv = CountVectorizer(analyzer='char',ngram_range=(3,3),max_features=1000)
-
+# waarom gebruiken we een CountVectorizer? zet data om in lijsten van getallen
 X_train = cv.fit_transform(X[:860])
 y_train = y[:860]
 X_test = cv.fit_transform(X[860:])
 y_test = y[860:]
+
 
 # 4)
 from sklearn.naive_bayes import MultinomialNB
@@ -29,4 +30,6 @@ newsgroups = cv.transform(fetch_20newsgroups(subset='test', categories=('alt.ath
 prediction = nb.predict(newsgroups)
 print(prediction)
 
-# I tried to look up how to do the other part, but I couldn't make it work.
+import numpy as np
+np.exp(nb.class_log_prior) # de prior weergeven
+np.exp(nb.feature_log_prob) # de weights (probabiliteiten) weergeven

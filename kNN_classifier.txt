@@ -1,0 +1,12 @@
+
+cv_scores of train data:
+[0.85430464  0.86378738  0.86710963  0.84385382  0.82724252  0.9  0.85953177  0.90268456  0.86912752  0.84563758]
+cv_scores mean of train data:
+*0.8633279428248098*
+
+cv_scores of test data:
+[0.86597938 0.81443299  0.78125  0.79166667  0.85416667  0.8  0.79787234  0.87096774  0.74193548  0.83870968]
+cv_scores mean of test data:
+*0.8156980948118692*
+
+Scores of train versus test data only have a difference of aprox. 0.476. 
