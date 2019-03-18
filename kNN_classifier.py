@@ -4,9 +4,9 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 import numpy as np
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import accuracy_score
 
 df = pd.read_csv('diminutive.train.csv', header=None)
-y = df.iloc[:,-1]
 
 def labeler(pdDF):
     labels = {}
@@ -17,23 +17,31 @@ def labeler(pdDF):
             c += 1
     return labels
 
-# y = labeler(df)
-lbls = {'T': 0, 'E': 1, 'J': 2, 'P': 3, 'K': 4}
+lst_labels = labeler(df)
+print(lst_labels)
 
-X = df.iloc[:,:-1]
-X_train = X.to_dict('records')
+X_train = df.iloc[:,:-1].to_dict('records')
+y_train = []
+
+for label in df.iloc[:,-1]:
+    y_train.append(lst_labels[label])
 
 dv = DictVectorizer(sparse=False)
-knn = KNeighborsClassifier(n_neighbors=3, metric='manhattan')
+knn = KNeighborsClassifier(n_neighbors=7, metric='manhattan')
 p = Pipeline([("dv", dv), ("cls", knn)])
 
-cv_scores_train = cross_val_score(p, X_train, y, cv=10)
-print(cv_scores_train)
+cv_scores_train = cross_val_score(p, X_train, y_train, cv=10)
 print('cv_scores mean of train data:{}'.format(np.mean(cv_scores_train)))
 
 X_test_todict = pd.read_csv('diminutive.test.csv', header=None).iloc[:,:-1].to_dict('records')
 y_test = pd.read_csv('diminutive.test.csv', header=None).iloc[:,-1]
 
-cv_scores_test = cross_val_score(p, X_test_todict, y_test, cv=10)
-print(cv_scores_test)
-print('cv_scores mean of test data:{}'.format(np.mean(cv_scores_test)))
+y_true = []
+for label in y_test:
+    y_true.append(lst_labels[label])
+
+p.fit(X_train, y_train)
+y_pred = p.predict(X_test_todict)
+
+accuracy = accuracy_score(y_true, y_pred)
+print('accuracy of test data:{}'.format(np.mean(accuracy)))
