@@ -18,7 +18,7 @@ def labeler(pdDF):
     return labels
 
 lst_labels = labeler(df)
-print(lst_labels)
+print("Labels:", lst_labels)
 
 X_train = df.iloc[:,:-1].to_dict('records')
 y_train = []
