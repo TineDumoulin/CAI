@@ -1,0 +1,32 @@
+Use the language identification data from week 1.
+	At first, I was struggling with the selection of the right columns, but I finally learned that you can just refer to columns in a csv-file by using their header names. 
+	This will be useful in the future.
+
+Create a .9 train/test split using the sklearn function, using shuffle=True, and random_state=44. Only this will make sure your results are comparable to results by others.
+	I tried to create the train/test split, but I made the mistake to stratify the data, with caused a warning:
+	'Warning: The least populated class in y has only 1 members, which is too few. The minimum number of members in any class cannot be less than n_splits=10'
+	This was solved by using the proposed parameter 'shuffle'.
+
+Select a vectorizer (e.g. CountVectorizer) and a classifier from sklearn, and put them in a pipeline.
+	As a vectorizer, I selected the count vectorizer
+	As a classifier, I selected the k neirest neighbors classifier
+
+Select three parameters from the vectorizer and classifier that you want to optimize.
+	For the vectorizer, I selected the word ngram ranges (1, 1), (1, 2) and (2, 2).
+	For the knn-classifier, I selected the amount of neighbors (1, 5 and 7) and the metric (manhattan, cosine and euclidean).
+
+	I had a hard time figuring out that you had use the assigned names of the vectorizer/classifier to refer to the parameters, but I finally learned how this worked.
+
+Calculate how many experiments you have to run using grid search without taking into account cross-validation (see the slides!).
+	I have selected three settings for three parameters. This means:
+	3*3*3 = 27 experiments will be conducted without taking into account the cross validation.
+
+Use a GridSearchCV to optimize the parameters.
+	Waiting for the results of the grid search ATM.
+
+Using the optimal parameters from grid search, calculate cross-validated scores on the train set.
+
+Using the same sets of optimal parameters, retrain your model on the entire data set, and predict labels on the test set. See if the classifier is overfitting.
+
+Write a short report, highlighting explain what parameters you grid searched, which scores you got on train and test, and why it is (not) overfitting.
+
