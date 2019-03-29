@@ -3,7 +3,7 @@ Use the language identification data from week 1.
 	This will be useful in the future.
 
 Create a .9 train/test split using the sklearn function, using shuffle=True, and random_state=44. Only this will make sure your results are comparable to results by others.
-	I tried to create the train/test split, but I made the mistake to stratify the data, with caused a warning:
+	I tried to create the train/test split, but I made the mistake to stratify the data, which caused a warning:
 	'Warning: The least populated class in y has only 1 members, which is too few. The minimum number of members in any class cannot be less than n_splits=10'
 	This was solved by using the proposed parameter 'shuffle'.
 
@@ -15,18 +15,255 @@ Select three parameters from the vectorizer and classifier that you want to opti
 	For the vectorizer, I selected the word ngram ranges (1, 1), (1, 2) and (2, 2).
 	For the knn-classifier, I selected the amount of neighbors (1, 5 and 7) and the metric (manhattan, cosine and euclidean).
 
-	I had a hard time figuring out that you had use the assigned names of the vectorizer/classifier to refer to the parameters, but I finally learned how this worked.
+	I had a hard time figuring out that you had use the assigned names of the vectorizer/classifier plus two underscores to refer to the parameters, but I finally learned how this worked.
 
 Calculate how many experiments you have to run using grid search without taking into account cross-validation (see the slides!).
-	I have selected three settings for three parameters. This means:
-	3*3*3 = 27 experiments will be conducted without taking into account the cross validation.
+	I have selected 2 settings for 3 parameters. This means:
+	2 * 2 * 2 = 8 experiments will be conducted without taking into account the cross validation.
 
 Use a GridSearchCV to optimize the parameters.
-	Waiting for the results of the grid search ATM.
+	The verbosity of my grid search outputted the following:
+	
+		Fitting 10 folds for each of 8 candidates, totalling 80 fits
+		[Parallel(n_jobs=-1)]: Using backend LokyBackend with 4 concurrent workers.
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.35889798957557706, total=59.9min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.45879732739420936, total=60.1min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.4809188588366062, total=60.1min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.29718726868985934, total=60.1min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.3691904047976012, total=58.8min
+		[Parallel(n_jobs=-1)]: Done   5 tasks      | elapsed: 118.9min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.35523845287269995, total=58.9min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.3491411501120239, total=59.2min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.3561541339319117, total=59.1min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.3524990605035701, total=58.8min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=3, score=0.3667168674698795, total=58.9min
+		[Parallel(n_jobs=-1)]: Done  10 tasks      | elapsed: 177.9min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.3427091043671355, total=59.6min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.3634679510929974, total=59.6min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.33320923306031275, total=59.2min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.36228656273199705, total=59.4min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.3329592218481107, total=58.8min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.32598954443614636, total=59.0min
+		[CV] cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.34445277361319343, total=59.1min
+		[Parallel(n_jobs=-1)]: Done  17 tasks      | elapsed: 296.3min
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8364174685418209, total=   1.5s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.3398422831393166, total=59.1min
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8410522415709522, total=   1.5s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8377876763177431, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8276247207743858, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8308439133681852, total=   1.7s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8353909465020576, total=   1.7s
+		[Parallel(n_jobs=-1)]: Done  24 tasks      | elapsed: 296.4min
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8407046476761619, total=   1.5s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8358993616222306, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8338970311912814, total=   1.5s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=3, score=0.8509036144578314, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8386380458919319, total=   1.7s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8399407187847351, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8337045285820341, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8302308265078183, total=   1.7s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8274831964152353, total=   1.6s
+		[Parallel(n_jobs=-1)]: Done  33 tasks      | elapsed: 296.5min
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8327721661054994, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8332083958020989, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8419076229815997, total=   1.6s
+		[CV] cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8297632468996617, total=   1.6s
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=cosine, knn__n_neighbors=5, score=0.8478915662650602, total=   1.6s
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.48928974069898534, total=59.3min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 1), knn__metric=manhattan, knn__n_neighbors=5, score=0.3429969879518072, total=59.2min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.09040385327899222, total=188.7min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.09725315515961395, total=188.5min
+		[Parallel(n_jobs=-1)]: Done  42 tasks      | elapsed: 485.4min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.09344750558451229, total=188.4min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.0917838638045892, total=189.1min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.09782608695652174, total=186.5min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.09275253473526099, total=186.3min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.08663181478715459, total=186.9min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.09839132061354283, total=186.9min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.0920706501315295, total=186.2min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=3, score=0.0963855421686747, total=186.4min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.05891070766950723, total=188.4min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.061065877128053295, total=188.5min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.06533036377134373, total=188.7min
+		[Parallel(n_jobs=-1)]: Done  53 tasks      | elapsed: 1046.8min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.06775874906924795, total=188.8min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.06172839506172839, total=187.2min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.05638536221060493, total=187.3min
+		[CV] cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.06296851574212893, total=187.4min
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8393782383419689, total=   2.2s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8366061504260838, total=   2.1s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8414996288047513, total=   2.2s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8309754281459419, total=   2.2s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8349514563106796, total=   2.1s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8327721661054994, total=   2.1s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.0642132932782576, total=187.2min
+		[Parallel(n_jobs=-1)]: Done  64 tasks      | elapsed: 1234.4min
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8418290854572713, total=   2.2s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8385279759669546, total=   2.2s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.830890642615558, total=   2.2s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=3, score=0.8445030120481928, total=   2.2s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.840858623242043, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8391997035939237, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8374164810690423, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8291139240506329, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8293502613890963, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8361391694725028, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8298350824587706, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8396545249718362, total=   2.3s
+		[CV] cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5 ..
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8312664411875235, total=   2.3s
+		[CV]  cv__ngram_range=(1, 2), knn__metric=cosine, knn__n_neighbors=5, score=0.8460090361445783, total=   2.3s
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.10522360015031942, total=187.2min
+		[CV]  cv__ngram_range=(1, 2), knn__metric=manhattan, knn__n_neighbors=5, score=0.06061746987951807, total=187.6min
+		[Parallel(n_jobs=-1)]: Done  80 out of  80 | elapsed: 1235.6min finished
+		
+		Best parameter (CV score=0.837):
+		{'cv__ngram_range': (1, 2), 'knn__metric': 'cosine', 'knn__n_neighbors': 3}
+		
+		[Parallel(n_jobs=1)]: Using backend SequentialBackend with 1 concurrent workers.
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8358358358358359, total=   1.6s
+		[Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed:    2.3s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8346140995656532, total=   1.6s
+		[Parallel(n_jobs=1)]: Done   2 out of   2 | elapsed:    4.0s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8443775100401606, total=   1.5s
+		[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed:    5.6s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8329419657832942, total=   1.5s
+		[Parallel(n_jobs=1)]: Done   4 out of   4 | elapsed:    7.2s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8368580060422961, total=   1.5s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8370295698924731, total=   1.6s
+		[CV]  ................................................................
+		[CV] ........................ , score=0.836982148871674, total=   1.6s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8363145460681741, total=   1.6s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8427991886409736, total=   1.6s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8313008130081301, total=   1.5s
+		[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:   17.3s finished
+		cv_scores mean of train data:0.8369053683748664
+
+	The best parameter set was {'cv__ngram_range': (1, 2), 'knn__metric': 'cosine', 'knn__n_neighbors': 3} with a score of 0.837.
+	The grid search ran for about 20 hours.
 
 Using the optimal parameters from grid search, calculate cross-validated scores on the train set.
+	Verbosity of the cross validation:
+		
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8462321792260692, total=   8.3s
+		[Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed:   10.0s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8583078491335372, total=   6.1s
+		[Parallel(n_jobs=1)]: Done   2 out of   2 | elapsed:   16.3s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8525928950592079, total=   6.1s
+		[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed:   22.6s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8608500204331835, total=   7.9s
+		[Parallel(n_jobs=1)]: Done   4 out of   4 | elapsed:   30.6s remaining:    0.0s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8526165167620605, total=   9.2s
+		[CV]  ................................................................
+		[CV] ........................ , score=0.856207813458785, total=   9.2s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8471624667076418, total=  10.3s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8511379946688538, total=   9.2s
+		[CV]  ................................................................
+		[CV] ....................... , score=0.8465804066543438, total=   8.1s
+		[CV]  ................................................................
+		[CV] ........................ , score=0.851326341764343, total=   6.5s
+		[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed:  1.4min finished
+
+	cv_scores mean of train data:0.8523014483868024
 
 Using the same sets of optimal parameters, retrain your model on the entire data set, and predict labels on the test set. See if the classifier is overfitting.
+	The accuracy score for the model on the entire data set is 0.9142798690671031. Which is 6% higher
 
-Write a short report, highlighting explain what parameters you grid searched, which scores you got on train and test, and why it is (not) overfitting.
 
+		P.S.: I set the n_jobs parameter in the grid search to -1, so I could use all of the CPU cores of the pc I was running it on. 
+		However, the CV was executed on another pc, so that's why I didn't adjust de n_jobs of the CV.

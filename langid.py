@@ -15,10 +15,11 @@ y = df['language']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, shuffle=True, random_state=44)
 
-""" # part 2
+# part 2
 cv = CountVectorizer()
 knn = KNeighborsClassifier()
-pipe = Pipeline(steps=[('cv', cv), ('knn', knn)]) """
+pipe = Pipeline(steps=[('cv', cv), ('knn', knn)]) 
+
 
 # extra: test experiment
 cv = CountVectorizer(ngram_range=(1,1))
@@ -27,21 +28,21 @@ p = Pipeline(steps=[('cv', cv), ('knn', knn)])
 cv_scores_train = cross_val_score(p, X_train, y_train, cv=2)
 print('cv_scores mean of train data:{}'.format(np.mean(cv_scores_train)))
 
-""" # part 3
+# part 3
 parameters = {'cv__ngram_range': [(1,1), (1,2), (2,2)], 'knn__n_neighbors': [3, 5, 7], 'knn__metric': ['manhattan', 'cosine', 'euclidean']} 
 # without taking into account crossval, the experiment will run 3*3*2=18 times
 
 # part 4
-GSCV = GridSearchCV(pipe, parameters, iid=False, cv=10, return_train_score=False, verbose=10)
+GSCV = GridSearchCV(pipe, parameters, iid=False, cv=10, return_train_score=False, verbose=10, n_jobs=-1)
 GSCV.fit(X_train, y_train)
 print("Best parameter (CV score=%0.3f):" % GSCV.best_score_)
 print(GSCV.best_params_)
 
-# Best parameter (CV score=0.744):
-# {'cv__ngram_range': (1, 1), 'knn__metric': 'cosine', 'knn__n_neighbors': 3}
+# Best parameter (CV score=0.837):
+# {'cv__ngram_range': (1, 2), 'knn__metric': 'cosine', 'knn__n_neighbors': 3}
 
 # part 5
-cv = CountVectorizer(ngram_range=(1,1))
+cv = CountVectorizer(ngram_range=(1,2))
 knn = KNeighborsClassifier(n_neighbors=3, metric='cosine')
 pipe = Pipeline(steps=[('cv', cv), ('knn', knn)])
 
@@ -51,4 +52,8 @@ print('cv_scores mean of train data:{}'.format(np.mean(cv_scores_train)))
 # part 6
 pipe.fit(X, y)
 y_pred = pipe.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred) """
+accuracy = accuracy_score(y_test, y_pred)
+print(accuracy)
+
+# part 7
+# file langid.txt in repository.
