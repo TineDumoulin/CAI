@@ -20,3 +20,4 @@ classifier.fit(X_train, y_train)
 score = classifier.score(X_test, y_test)
 
 print("Accuracy:", score)
+# resulted in 'Accuracy: 0.7508480325644504'

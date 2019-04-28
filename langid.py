@@ -50,7 +50,7 @@ cv_scores_train = cross_val_score(pipe, X, y, cv=10, verbose=5)
 print('cv_scores mean of train data:{}'.format(np.mean(cv_scores_train)))
 
 # part 6
-pipe.fit(X, y)
+pipe.fit(X_train, y_train)
 y_pred = pipe.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(accuracy)
