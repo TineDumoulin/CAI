@@ -6,6 +6,7 @@ import seaborn as sns
 
 from imblearn.over_sampling import RandomOverSampler
 from IPython.core.display import display, HTML
+from keras import regularizers
 from keras.callbacks import Callback, ModelCheckpoint
 from keras.layers import Input, Dense, Dropout, Embedding, LSTM, Flatten
 from keras.models import Model, Sequential
@@ -82,11 +83,12 @@ vocab_size = len(tokenizer.word_index) + 1
 
  # simple deep learning model
 inputs = Input(shape=(MAX_LENGTH, ))
-embedding_layer = Embedding(vocab_size, 128, input_length=MAX_LENGTH)(inputs)
+embedding_layer = Embedding(vocab_size, 32, input_length=MAX_LENGTH)(inputs)
 x = Flatten()(embedding_layer)
 x = (Dropout(0.5))(x)
-x = Dense(32, activation='relu')(x)
-predictions = Dense(num_class, activation='softmax')(x)
+# x = Dense(24, kernel_regularizer=regularizers.l2(0.001), activation='relu')(x)
+## x = Dense(24, kernel_regularizer=regularizers.l2(0.001), activation='relu')(x)
+predictions = Dense(num_class, kernel_regularizer=regularizers.l2(0.001), activation='softmax')(x)
 
 model = Model(inputs=[inputs], outputs=predictions)
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
@@ -95,7 +97,7 @@ model.summary()
 
 filepath="weights.hdf5"
 checkpointer = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-history = model.fit([X_resampled], batch_size=64, y=to_categorical(y_resampled), verbose=1, validation_split=0.25, shuffle=True, epochs=20, callbacks=[checkpointer])
+history = model.fit([X_resampled], batch_size=64, y=to_categorical(y_resampled), verbose=1, validation_split=0.25, shuffle=True, epochs=50, callbacks=[checkpointer])
 
 # understanding the model fit
 df2 = pd.DataFrame({'epochs':history.epoch, 'accuracy': history.history['acc'], 'validation_accuracy': history.history['val_acc']})
@@ -105,18 +107,31 @@ g = sns.pointplot(x="epochs", y="validation_accuracy", data=df2, fit_reg=False, 
 # looking at accuracy
 predicted = model.predict(X_test)
 predicted = np.argmax(predicted, axis=1)
-print('Accuracy: ', accuracy_score(y_test, predicted))
+print('Test accuracy: ', accuracy_score(y_test, predicted))
 
 # plotting the train and validation loss to diagnose over- or underfitting
 plt.clf()
 plt.plot(history.history['loss'], label='model train loss')
 plt.plot(history.history['val_loss'], label='validation loss')
-plt.axis('equal')
-plt.title('model train loss vs. validation loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
+plt.title('Training and validation loss')
+plt.ylabel('Loss')
+plt.xlabel('Epochs')
 plt.show()
 
+# plotting the train and validation accuracy
+plt.clf()
+
+acc = history.history['acc']
+val_acc = history.history['val_acc']
+
+plt.plot(history.history['acc'], acc, label='Training accuracy')
+plt.plot(history.history['val_acc'], val_acc, label='Validation accuracy')
+plt.title('Training and validation accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+
+plt.show()
 
 """
 # recurrent neural network
