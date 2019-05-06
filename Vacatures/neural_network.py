@@ -19,8 +19,26 @@ from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import LabelEncoder
 from time import time
 
-# reading the data
+df = pd.read_csv('vacatures_train.csv', header=0)
+# delete instance with strange labels ([if !supportLists], [endif])
+df.drop(df.index[578])
+
+""" # detect the language of the instance
+lang_list = []
+print('Detecting languages of instances...\n')
+for description in df['description']:
+    lang = detect(description)
+    lang_list.append(lang)
+
+# add the language label as a column to the dataframe and export it to a new csv-file (so I don't have to run this code each time)
+pd_series_langs = pd.Series(lang_list)
+df = df.assign(language=pd_series_langs)
+df = df[df.language == 'nl']
+df.to_csv('vacatures_train_dutch.csv') """
+
+# preprocessing the job descriptions
 df = pd.read_csv('vacatures_train_dutch.csv', header=0)
+
 # print(df.head())
 
 # checking the class distribution
@@ -44,7 +62,7 @@ X = df.description.values
 y = df.type.astype('category').cat.codes
 
 # tokenize the input
-MAX_LENGTH = 200
+MAX_LENGTH = 250
 tokenizer = Tokenizer()
 tokenizer.fit_on_texts(X)
 description_seq = tokenizer.texts_to_sequences(X)
@@ -62,11 +80,11 @@ print(X_resampled.shape, y_resampled.shape)
 
 vocab_size = len(tokenizer.word_index) + 1
 
-""" # simple deep learning model
+ # simple deep learning model
 inputs = Input(shape=(MAX_LENGTH, ))
 embedding_layer = Embedding(vocab_size, 128, input_length=MAX_LENGTH)(inputs)
 x = Flatten()(embedding_layer)
-x = (Dropout(0.6))(x)
+x = (Dropout(0.5))(x)
 x = Dense(32, activation='relu')(x)
 predictions = Dense(num_class, activation='softmax')(x)
 
@@ -75,9 +93,9 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc']
 
 model.summary()
 
-filepath="weights-simple.hdf5"
+filepath="weights.hdf5"
 checkpointer = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-history = model.fit([X_resampled], batch_size=64, y=to_categorical(y_resampled), verbose=1, validation_split=0.25, shuffle=True, epochs=3, callbacks=[checkpointer])
+history = model.fit([X_resampled], batch_size=64, y=to_categorical(y_resampled), verbose=1, validation_split=0.25, shuffle=True, epochs=20, callbacks=[checkpointer])
 
 # understanding the model fit
 df2 = pd.DataFrame({'epochs':history.epoch, 'accuracy': history.history['acc'], 'validation_accuracy': history.history['val_acc']})
@@ -87,28 +105,26 @@ g = sns.pointplot(x="epochs", y="validation_accuracy", data=df2, fit_reg=False, 
 # looking at accuracy
 predicted = model.predict(X_test)
 predicted = np.argmax(predicted, axis=1)
-
-print('f1: 4', f1_score(y_test, predicted, average='weighted'))
-print('recall: ', recall_score(y_test, predicted, average='weighted'))
-print('precision: ', precision_score(y_test, predicted, average='weighted'))
+print('Accuracy: ', accuracy_score(y_test, predicted))
 
 # plotting the train and validation loss to diagnose over- or underfitting
+plt.clf()
 plt.plot(history.history['loss'], label='model train loss')
 plt.plot(history.history['val_loss'], label='validation loss')
 plt.axis('equal')
 plt.title('model train loss vs. validation loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
-plt.show() """
+plt.show()
 
+
+"""
 # recurrent neural network
 inputs = Input(shape=(MAX_LENGTH, ))
-embedding_layer = Embedding(vocab_size, 128, input_length=MAX_LENGTH)(inputs)
-x = Flatten()(embedding_layer)
-x = (Dropout(0.5))(x)
+embedding_layer = Embedding(vocab_size, 256, input_length=MAX_LENGTH)(inputs)
 x = LSTM(64)(embedding_layer)
-x = Dense(32, activation='relu')(x)
 x = (Dropout(0.5))(x)
+x = Dense(64, activation='relu')(x)
 predictions = Dense(num_class, activation='softmax')(x)
 model = Model(inputs=[inputs], outputs=predictions)
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc']) 
@@ -118,31 +134,48 @@ model.summary()
 filepath="weights.hdf5"
 checkpointer = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
 
-history = model.fit([X_resampled], batch_size=64, y=to_categorical(y_resampled), verbose=1, validation_split=0.25, shuffle=True, epochs=15, callbacks=[checkpointer])
+history = model.fit([X_resampled], batch_size=64, y=to_categorical(y_resampled), verbose=1, validation_split=0.25, shuffle=True, epochs=5, callbacks=[checkpointer])
 
 df3 = pd.DataFrame({'epochs':history.epoch, 'accuracy': history.history['acc'], 'validation_accuracy': history.history['val_acc']})
 g = sns.pointplot(x="epochs", y="accuracy", data=df3, fit_reg=False)
 g = sns.pointplot(x="epochs", y="validation_accuracy", data=df3, fit_reg=False, color='green')
 
-# plotting the train and validation loss to diagnose over- or underfitting
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('train loss vs validation loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(['train', 'validation'], loc='upper right')
+# plotting the train and validation loss
+loss = history.history['loss']
+val_loss = history.history['val_loss']
+
+epochs = range(1, len(loss) + 1)
+
+plt.plot(epochs, loss, 'bo', label='Training loss')
+plt.plot(epochs, val_loss, 'b', label='Validation loss')
+plt.title('Training and validation loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+
+plt.show()
+
+# plotting the train and validation accuracy
+plt.clf()
+
+acc = history.history['acc']
+val_acc = history.history['val_acc']
+
+plt.plot(epochs, acc, 'bo', label='Training accuracy')
+plt.plot(epochs, val_acc, 'b', label='Validation accuracy')
+plt.title('Training and validation accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+
 plt.show()
 
 # looking at accuracy
-model.load_weights('weights.hdf5')
-predicted = model.predict(X_test)
-predicted = np.argmax(predicted, axis=1)
+model = model.load_weights('weights.hdf5')
+results = model.evaluate(X_test, y_test)
+print('Results: ', results)
 
-print('accuracy: ', accuracy_score(y_test, predicted))
-print('f1: 4', f1_score(y_test, predicted, average='weighted'))
-print('recall: ', recall_score(y_test, predicted, average='weighted'))
-print('precision: ', precision_score(y_test, predicted, average='weighted'))
-
+print('accuracy: ', accuracy_score(y_test, predict)) """
 """ # recurrent NN with RandomizedSearchCV
 def create_model():
     model = Sequential()

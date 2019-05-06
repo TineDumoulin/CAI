@@ -244,3 +244,24 @@ Epoch 10/10
 Epoch 00010: val_acc improved from 0.69470 to 0.69773, saving model to weights.hdf5
 [20 20 13 ...  6 20  1]
 0.7084745762711865
+
+For class A:
+True positive:
+> The model assigned label A correctly to an instance of class A
+
+False positive:
+> The model assigned another label to an instance of class A
+
+True negative:
+> The model didn't assign label A to an instance of another class
+
+False negative:
+> The model assigned label A to an instance of another class
+
+What is precision in this model?
+> Precision talks about how precise/accurate your model is out of those predicted positive, how many of them are actual positive.
+> 
+
+What is recall in this model?
+> Recall actually calculates how many of the Actual Positives our model capture through labeling it as Positive (True Positive)
+> Hoe veel van de voorspelde klassen krijgen hun juiste label?

@@ -75,7 +75,7 @@ def train_model(classifier, feature_vector_train, label, feature_vector_valid, i
     classifier.fit(feature_vector_train, label)
     
     # predict the labels on validation dataset
-    predictions = classifr.predict(feature_vector_valid)
+    predictions = classifier.predict(feature_vector_valid)
     
     if is_neural_net:
         predictions = predictions.argmax(axis=-1)
@@ -93,7 +93,7 @@ def create_model_architecture(input_size):
     output_layer = layers.Dense(1, activation="softmax")(hidden_layer)
 
     classifier = models.Model(inputs = input_layer, outputs = output_layer)
-    classifier.compile(optimizer=optimizers.Adam(), loss='sparse_categorical_crossentropy')
+    classifier.compile(optimizer=optimizers.Adam(), loss='categorical_crossentropy')
     return classifier
 
 classifier = create_model_architecture(X_train_tfidf.shape[1])
