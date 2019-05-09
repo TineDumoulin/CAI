@@ -15,7 +15,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score
 from pathlib import Path
 
-df = pd.read_csv('vacatures_train.csv', header=0)
 # delete instance with strange labels ([if !supportLists], [endif])
 df.drop(df.index[578])
 
@@ -99,3 +98,32 @@ def create_model_architecture(input_size):
 classifier = create_model_architecture(X_train_tfidf.shape[1])
 accuracy = train_model(classifier, X_train_tfidf, y_train, X_test_tfidf, is_neural_net=True)
 print("NN, word Level TF IDF Vectors",  accuracy) 
+
+
+
+
+# opening the test data
+df = pd.read_csv('vacatures_test_zonderlabel.csv', header=0)
+X_test = df[]
+# processing the test data
+lang_list = []
+print('Detecting languages of instances...\n')
+for description in df['description']:
+    lang = detect(description)
+    lang_list.append(lang)
+
+pd_series_langs = pd.Series(lang_list)
+df = df.assign(language=pd_series_langs)
+df = df[df.language == 'nl']
+df.to_csv('vacatures_test_dutch.csv')
+
+# loading the model
+print("Creating model and loading weights from file...\n")
+NN = load_model("neural_net.h5")
+NN.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
+print("Created model and loaded weights from file")
+
+# predicting labels on test data
+
+# undoing the encoding of the labels
+encoder = LabelEncoder()
