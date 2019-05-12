@@ -156,5 +156,12 @@ print(type(y_test_decoded))
 print(y_test_decoded.shape)
 print(y_test_decoded[:50:])
 
-# saving the labels to CSV
-np.savetxt("vacatures_test_labels_DumoulinTine.csv", y_test_decoded, delimiter=",")
+# saving the labels to csv
+with open('vacatures_test_labels.csv', 'w+') as f:
+    for i, item in enumerate(y_test_decoded):
+        if i != len(y_test_decoded) - 1:
+            item = item + ',\n'
+            f.write(item)
+        else:
+            item = item + ','
+            f.write(item)
