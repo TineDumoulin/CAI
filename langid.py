@@ -9,7 +9,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score
 
 # part 1
-df =pd.read_csv('langid.csv', header=0)
+df = pd.read_csv('langid.csv', header=0)
 X = df['doc']
 y = df['language']
 
@@ -50,7 +50,7 @@ cv_scores_train = cross_val_score(pipe, X, y, cv=10, verbose=5)
 print('cv_scores mean of train data:{}'.format(np.mean(cv_scores_train)))
 
 # part 6
-pipe.fit(X_train, y_train)
+pipe.fit(X, y)
 y_pred = pipe.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(accuracy)

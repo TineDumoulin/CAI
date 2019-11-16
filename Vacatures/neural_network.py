@@ -8,6 +8,7 @@ from IPython.core.display import display, HTML
 from keras import regularizers
 from keras.callbacks import Callback, ModelCheckpoint
 from keras.layers import Input, Dense, Dropout, Embedding, LSTM, Flatten
+from keras.metrics import categorical_accuracy
 from keras.models import Model, Sequential, load_model
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
@@ -133,23 +134,30 @@ print('Test accuracy: ', accuracy_score(y_val, predicted)) """
 
 # TEST DATA PREDICTION
 # opening the test file
-df_test = pd.read_csv('vacatures_test_zonderlabel.csv', header=0)
+df_test = pd.read_csv('vacatures_test_labels.csv')
+df_true = pd.read_csv('vacatures_test_metlabels.csv', header=0)
 
-# Tokenizing (and preprocessing) the test data
+""" # Tokenizing (and preprocessing) the test data
 description_seq_test = tokenizer.texts_to_sequences(df_test['description'])
-X_test = pad_sequences(description_seq, padding='pre', maxlen=MAX_LENGTH)
+X_test = pad_sequences(description_seq_test, padding='pre', maxlen=MAX_LENGTH)
 
 # loading the model
 print("Creating model and loading weights from file...\n")
-NN = load_model("neural_net.h5")
+NN = load_model("neural_net.hdf5")
 NN.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc'])
 print("Created model and loaded weights from file")
 
 # predicting labels on test data
 y_test = NN.predict(X_test)
-y_test = np.argmax(y_test, axis=1)
+y_test = encoder.inverse_transform(y_test) """
 
-# decoding the labels
+y_pred = df_test['type']
+y_true = df_true['type']
+
+# comparing the predicted labels to the actual labels
+print(categorical_accuracy(y_true, y_pred))
+
+""" # decoding the labels
 y_test_decoded = encoder.inverse_transform(y_test)
 print(df_test[:50:])
 print(type(y_test_decoded))
@@ -164,4 +172,4 @@ with open('vacatures_test_labels.csv', 'w+') as f:
             f.write(item)
         else:
             item = item + ','
-            f.write(item)
+            f.write(item) """
